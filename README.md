@@ -80,6 +80,25 @@ What each button does:
 
 ---
 
+### Frequently Asked Questions
+
+1. The APP cannot connect to the glasses
+   - **Solution**: Fold the glasses, press the button on the glasses three times to re-pair the glasses with the APP.
+2. The APP shows "WIFI_CONNECT_FAILED"
+   - **Solution**: The easiest way to solve this issue is to re-connect the glasses again. If the issue still persists, you might need to:
+     - (a) Enable the Developer mode of the phone.
+     - (b) "Connect" which initiate the Bluetooth connection
+     - (c) During the APP retrying, go to the "WLAN Direct" in the settings of the phone, and manually connect to the glasses.
+     - (d) Return to the APP and it should be successful.
+3. The APP shows "AI Failed" or timeout
+   - **Solution**: Many API calls need to access through the VPN if you're in a restricted region (e.g., mainland China).
+4. The APP/glasses shows "text blurred or too small"
+   - **Solution**: Try to adjust the position and/or tilt of the glasses. You can view the picture taken by the glasses on the APP for your convenience to adjust.
+5. Other errors and issues:
+   - **Solution**: Please submit the issue on GitHub! We will fix it very soon.
+
+---
+
 ### Privacy note
 
 Captured images are synced to your phone for AI processing.
