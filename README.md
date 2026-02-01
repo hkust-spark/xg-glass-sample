@@ -1,86 +1,51 @@
-# xg-glass-release
+# xg-glass-sample
 
-`example.apk` connects Rokid glasses to an Android phone: it captures photos, syncs them to the phone, runs AI via your configured API endpoint, and displays the result on the glasses.
+This directory contains a set of **sample apps built with the xg.glass SDK**, to help developers quickly understand:
 
----
+- How to use the unified APIs across different smart glasses
+- How to build, install, and run a working glasses app from a **single Kotlin entry file**
 
-### What you need
-
-- An Android phone
-- Your Rokid glasses
-- Wi‑Fi and Location enabled on the phone (required for the glasses ↔ phone connection and image sync)
-- AI API credentials (Base URL / API key / model; configure in **AI settings** below)
+If you're new to the SDK, start with the main documentation (see [**developer guide**](https://xg.glass/developer-guide/)).
 
 ---
 
-### Install & open
+## photo_translator (Photo Translator)
 
-- Install the provided release APK on your phone.
-- Open AIGlass from your app list.
+Location: `xg-glass-sample/photo_translator`
 
----
+This sample demonstrates a minimal end-to-end flow: **capture photo → LLM translate → display on glasses**.
 
-### First-time setup (AI settings)
+- Capture a photo from the glasses camera
+- Encode the image as base64 and call OpenAI **Chat Completions** for image-text translation
+- Display the translated result on the glasses
 
-Before starting, open **AI settings** (tap to expand/collapse) and enter:
-- Base URL: an OpenAI-compatible `v1/chat/completions` endpoint (e.g. `https://api.poe.com/v1/chat/completions`)
-- Model: e.g. `GPT-5.2`
-- API Key
+### Quick run (recommended)
 
-Tap Apply to save. Settings are stored on the phone, so you usually only do this once.
+Run the single-file entry directly from this directory:
 
----
+```bash
+cd xg-glass-sample/photo_translator
+xg-glass run TranslationEntry.kt
+```
 
-### Normal usage flow
+Notes:
 
-Use this order: Connect → Apply (AI settings) → Start.
+- `xg-glass` is our CLI. Make sure it’s in your `PATH`. If you're running from the repo root, you can also use `./xg-glass ...`.
+- Before running, replace `YOUR_OPENAI_API_KEY_HERE` in `TranslationEntry.kt` with your own key (this is a placeholder; for real apps, inject secrets securely).
 
-What each button does:
-- Connect: Connects the phone to the glasses (for syncing photos and sending text to the glasses display).
-- Start: Starts the automatic loop: capture → sync → AI → display on glasses.
-- Stop: Stops the automatic loop.
+### Core logic (you can build this app in ~10 lines)
 
-Changing AI settings while running:
-- Best practice: tap Stop, then Apply, then Start again.
+In `TranslationEntry.kt`, the core logic that implements **capture → translate → display** is essentially just the snippet below (you only need ~10 lines like this to build the full app):
 
----
-
-### What you will see
-
-- On the phone: a running log (capture/sync/AI status).
-- On the glasses:
-   - For valid AI results, displayed as: `<question_id>: (<explanation>) **<answer>**`
-   - For invalid requests: displayed as `invalid request: <reason>`; the app retries sooner after invalid responses.
-
----
-
-### Frequently Asked Questions (FAQ)
-
-1. The app can't connect to the glasses
-   - Fold the glasses, then press the button on the glasses **three times** to re-pair the glasses with the app.
-2. The app shows "WIFI_CONNECT_FAILED"
-   - First, disconnect and reconnect the glasses. If the issue persists, try the following:
-   - **Try this first (recommended):**
-      - Keep **Wi‑Fi enabled** but **do not connect** to any Wi‑Fi network (this allows the Wi‑Fi P2P connection to be established successfully).
-      - Use **cellular data** to access the remote AI.
-   - Other workaround:
-      - Enable Developer mode on the phone.
-      - Tap Connect to initiate the Bluetooth connection.
-      - While the app is retrying, open the phone Settings → WLAN Direct / Wi‑Fi Direct and manually connect to the glasses.
-      - Return to the app; the connection should succeed.
-3. The app shows "AI Failed" or timeout
-   - Many API calls require a VPN in restricted regions (e.g., mainland China).
-4. The app/glasses shows "text blurred or too small"
-   - Try to adjust the position and/or tilt of the glasses. You can use the photo preview in the app to help with alignment.
-5. Other errors or issues:
-   - Please submit an issue on GitHub! We will fix it very soon.
-
----
-
-### Privacy note
-
-Captured images are synced to your phone for AI processing.
-
-The app saves captured images and generated answers locally (app storage) for operation/debugging. You can remove them by clearing the app’s data or uninstalling the app.
-
-Depending on your AI provider, images and prompts may be sent to your configured API server. Use a provider you trust.
+```kotlin
+override suspend fun run(ctx: UniversalAppContext): Result<Unit> {
+    val img = ctx.client.capturePhoto().getOrThrow()
+    val b64 = Base64.getEncoder().encodeToString(img.jpegBytes)
+    val req = chatCompletionRequest {
+        model = ModelId("gpt-4o-mini")
+        messages { user { content { text("Translate the text in this image to Chinese. Output only the result."); image("data:image/jpeg;base64,$b64") } } }
+    }
+    val text = openAI.chatCompletion(req).choices.firstOrNull()?.message?.content.orEmpty().ifBlank { "No text" }
+    return ctx.client.display(text, DisplayOptions())
+}
+```
