@@ -1,0 +1,3 @@
+[submodule "subtext-interpreter"]
+	path = subtext-interpreter
+	url = https://github.com/mengzili/subtext-interpreter
