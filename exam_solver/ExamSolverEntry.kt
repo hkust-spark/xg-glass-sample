@@ -10,9 +10,11 @@ import com.aallam.openai.api.chat.TextPart
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIHost
+import com.universalglasses.appcontract.AIApiSettings
 import com.universalglasses.appcontract.UniversalAppContext
 import com.universalglasses.appcontract.UniversalAppEntrySimple
 import com.universalglasses.appcontract.UniversalCommand
+import com.universalglasses.appcontract.UserSettingField
 import com.universalglasses.core.CaptureOptions
 import com.universalglasses.core.DisplayOptions
 import kotlinx.coroutines.currentCoroutineContext
@@ -38,6 +40,11 @@ import java.util.Base64
 class ExamSolverEntry : UniversalAppEntrySimple {
     override val id: String = "exam_solver_demo"
     override val displayName: String = "Exam Solver Demo"
+
+    override fun userSettings(): List<UserSettingField> = AIApiSettings.fields(
+        defaultBaseUrl = "https://api.poe.com/v1/",
+        defaultModel = "GPT-5.2",
+    )
 
     override fun commands(): List<UniversalCommand> {
         return listOf(ExamSolverCommand())
@@ -75,19 +82,27 @@ private class ExamSolverCommand : UniversalCommand {
 
         // --- History ---
         private const val MAX_HISTORY_ROUNDS = 5
-
-        // --- AI API defaults (OpenAI-compatible Chat Completions, e.g., Poe) ---
-        private const val API_BASE_URL = "https://api.poe.com/v1/"
-        private const val API_MODEL = "GPT-5.2"
-        // TODO: Replace with your actual Poe API key.
-        private const val API_KEY = ""
     }
 
-    // ===== OpenAI client (aallam/openai-kotlin, configured for Poe) =====
-    private val openAI = OpenAI(
-        token = API_KEY,
-        host = OpenAIHost(baseUrl = API_BASE_URL),
-    )
+    // ===== OpenAI client — created lazily from user settings =====
+    private var openAI: OpenAI? = null
+    private var apiModel: String = ""
+
+    /** (Re)create the OpenAI client from the user-configured settings in [ctx]. */
+    private fun ensureClient(ctx: UniversalAppContext) {
+        val baseUrl = AIApiSettings.baseUrl(ctx.settings)
+        val apiKey = AIApiSettings.apiKey(ctx.settings)
+        apiModel = AIApiSettings.model(ctx.settings)
+
+        require(baseUrl.isNotBlank()) { "API Base URL is not configured. Please fill in Settings and Apply." }
+        require(apiKey.isNotBlank()) { "API Key is not configured. Please fill in Settings and Apply." }
+        require(apiModel.isNotBlank()) { "Model is not configured. Please fill in Settings and Apply." }
+
+        openAI = OpenAI(
+            token = apiKey,
+            host = OpenAIHost(baseUrl = baseUrl),
+        )
+    }
 
     // ===== Conversation history (always starts with the system prompt) =====
     private val messages: MutableList<ChatMessage> = mutableListOf(
@@ -106,8 +121,15 @@ private class ExamSolverCommand : UniversalCommand {
     // ===================================================================
 
     override suspend fun run(ctx: UniversalAppContext): Result<Unit> {
+        try {
+            ensureClient(ctx)
+        } catch (e: IllegalArgumentException) {
+            ctx.log("ERROR: ${e.message}")
+            return Result.failure(e)
+        }
+
         val client = ctx.client
-        ctx.log("Exam Solver started. model=${client.model}")
+        ctx.log("Exam Solver started. model=${client.model}, ai=$apiModel")
 
         // Initial delay with countdown.
         showCountdown(ctx, INITIAL_DELAY_MS)
@@ -256,11 +278,11 @@ private class ExamSolverCommand : UniversalCommand {
         trimHistory()
 
         val request = ChatCompletionRequest(
-            model = ModelId(API_MODEL),
+            model = ModelId(apiModel),
             messages = messages.toList(),
         )
 
-        Log.d(TAG, "Sending streaming request: model=$API_MODEL, historyMessages=${messages.size}")
+        Log.d(TAG, "Sending streaming request: model=$apiModel, historyMessages=${messages.size}")
 
         try {
             // --- Collect streaming chunks ---
@@ -269,7 +291,7 @@ private class ExamSolverCommand : UniversalCommand {
             var lastEmitAt = 0L
             var streamError: Throwable? = null
 
-            openAI.chatCompletions(request)
+            openAI!!.chatCompletions(request)
                 .catch { e ->
                     streamError = e
                     Log.e(TAG, "Stream error", e)
