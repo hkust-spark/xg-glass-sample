@@ -57,6 +57,7 @@ private class PhotoTranslateCommand : UniversalCommand {
         }
 
         val img = ctx.client.capturePhoto().getOrThrow()
+        ctx.onCapturedImage?.invoke(img)
         val b64 = Base64.getEncoder().encodeToString(img.jpegBytes)
         val req = chatCompletionRequest {
             model = ModelId(apiModel)
