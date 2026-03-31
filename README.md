@@ -49,3 +49,4 @@ override suspend fun run(ctx: UniversalAppContext): Result<Unit> {
     return ctx.client.display(text, DisplayOptions())
 }
 ```
+
