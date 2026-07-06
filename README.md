@@ -7,6 +7,17 @@ This directory contains a set of **sample apps built with the xg.glass SDK**, to
 
 If you're new to the SDK, start with the main documentation (see [**developer guide**](https://xg.glass/developer-guide/)).
 
+## Prerequisites
+
+Install the CLI and clone the SDK checkout once:
+
+```bash
+pip install xg-glass
+git clone https://github.com/hkust-spark/xg-glass-sdk
+```
+
+The SDK checkout is needed when the PyPI-installed CLI runs a single Kotlin entry file. In the examples below, replace `/path/to/xg-glass-sdk` with your checkout path. If you are running from inside an SDK checkout, the same commands still work without `--sdk`.
+
 ---
 
 ## photo_translator (Photo Translator)
@@ -25,17 +36,17 @@ Run the single-file entry directly from this directory:
 
 ```bash
 cd xg-glass-sample/photo_translator
-xg-glass run TranslationEntry.kt
+xg-glass run PhotoTranslatorEntry.kt --sdk /path/to/xg-glass-sdk
 ```
 
 Notes:
 
-- `xg-glass` is our CLI. Make sure it’s in your `PATH`. If you're running from the repo root, you can also use `./xg-glass ...`.
-- Before running, replace `YOUR_OPENAI_API_KEY_HERE` in `TranslationEntry.kt` with your own key (this is a placeholder; for real apps, inject secrets securely).
+- `xg-glass` is installed with `pip install xg-glass`; for PyPI installs, pass `--sdk /path/to/xg-glass-sdk` when running a single `.kt` entry.
+- Before running, replace `YOUR_OPENAI_API_KEY_HERE` in `PhotoTranslatorEntry.kt` with your own key (this is a placeholder; for real apps, inject secrets securely).
 
 ### Core logic (you can build this app in ~10 lines)
 
-In `TranslationEntry.kt`, the core logic that implements **capture → translate → display** is essentially just the snippet below (you only need ~10 lines like this to build the full app):
+In `PhotoTranslatorEntry.kt`, the core logic that implements **capture → translate → display** is essentially just the snippet below (you only need ~10 lines like this to build the full app):
 
 ```kotlin
 override suspend fun run(ctx: UniversalAppContext): Result<Unit> {
