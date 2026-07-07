@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">XG Glass PFD Sample</string>
+    <string name="load_meta_button">Load Meta feature</string>
+    <string name="feature_meta_name">Meta glasses adapter</string>
+</resources>

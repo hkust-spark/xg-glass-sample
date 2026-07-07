@@ -5,7 +5,7 @@ This directory contains a set of **sample apps built with the xg.glass SDK**, to
 - How to use the unified APIs across different smart glasses
 - How to build, install, and run a working glasses app from a **single Kotlin entry file**
 
-These samples target xg.glass SDK `0.2.0`.
+These samples target xg.glass SDK `0.2.1`.
 
 If you're new to the SDK, start with the main documentation (see [**developer guide**](https://xg.glass/developer-guide/)).
 
@@ -17,6 +17,7 @@ If you're new to the SDK, start with the main documentation (see [**developer gu
 | `exam_solver` | Auto-capture loop with streaming AI answers and conversation memory. | `xg-glass run exam_solver/ExamSolverEntry.kt --sdk /path/to/xg-glass-sdk` |
 | `teleprompter` | Simulator-runnable display teleprompter with streaming/paged display degradation and tap/long-press controls. | `xg-glass run teleprompter/TeleprompterEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
 | `voice_notes` | Simulator-runnable microphone capture with transcription when AI settings are configured, otherwise an honest audio summary. | `xg-glass run voice_notes/VoiceNotesEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
+| `play_feature_delivery` | Standalone Android App Bundle sample that keeps Even + Simulator in the base app and loads the Meta adapter through an on-demand Play Feature Delivery split. | `cd play_feature_delivery && ./gradlew :app:bundleDebug` |
 
 ## Prerequisites
 
