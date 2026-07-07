@@ -1,11 +1,11 @@
 package com.example.phototranslator.logic
 
-import com.universalglasses.appcontract.AIApiSettings
-import com.universalglasses.appcontract.UniversalAppContext
-import com.universalglasses.appcontract.UniversalAppEntrySimple
-import com.universalglasses.appcontract.UniversalCommand
-import com.universalglasses.appcontract.UserSettingField
-import com.universalglasses.core.DisplayOptions
+import com.xgglass.appcontract.AIApiSettings
+import com.xgglass.appcontract.UniversalAppContext
+import com.xgglass.appcontract.UniversalAppEntrySimple
+import com.xgglass.appcontract.UniversalCommand
+import com.xgglass.appcontract.UserSettingField
+import com.xgglass.core.DisplayOptions
 import com.aallam.openai.api.chat.*
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI

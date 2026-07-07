@@ -5,6 +5,8 @@ This directory contains a set of **sample apps built with the xg.glass SDK**, to
 - How to use the unified APIs across different smart glasses
 - How to build, install, and run a working glasses app from a **single Kotlin entry file**
 
+These samples target xg.glass SDK `0.2.0`.
+
 If you're new to the SDK, start with the main documentation (see [**developer guide**](https://xg.glass/developer-guide/)).
 
 ## Prerequisites

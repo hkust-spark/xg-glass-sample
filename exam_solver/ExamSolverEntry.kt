@@ -10,13 +10,14 @@ import com.aallam.openai.api.chat.TextPart
 import com.aallam.openai.api.model.ModelId
 import com.aallam.openai.client.OpenAI
 import com.aallam.openai.client.OpenAIHost
-import com.universalglasses.appcontract.AIApiSettings
-import com.universalglasses.appcontract.UniversalAppContext
-import com.universalglasses.appcontract.UniversalAppEntrySimple
-import com.universalglasses.appcontract.UniversalCommand
-import com.universalglasses.appcontract.UserSettingField
-import com.universalglasses.core.CaptureOptions
-import com.universalglasses.core.DisplayOptions
+import com.xgglass.appcontract.AIApiSettings
+import com.xgglass.appcontract.UniversalAppContext
+import com.xgglass.appcontract.UniversalAppEntrySimple
+import com.xgglass.appcontract.UniversalCommand
+import com.xgglass.appcontract.UserSettingField
+import com.xgglass.core.CaptureOptions
+import com.xgglass.core.DisplayOptions
+import com.xgglass.core.PhotoQuality
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
@@ -142,7 +143,7 @@ private class ExamSolverCommand : UniversalCommand {
             displayStatus(ctx, "Capturing...")
 
             val captureResult = client.capturePhoto(
-                CaptureOptions(quality = 90, targetWidth = 2400, targetHeight = 1800)
+                CaptureOptions(photoQuality = PhotoQuality.HIGH, targetWidth = 2400, targetHeight = 1800)
             )
             val image = captureResult.getOrNull()
             if (image == null) {
