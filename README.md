@@ -16,6 +16,7 @@ If you're new to the SDK, start with the main documentation (see [**developer gu
 | `photo_translator` | Capture a photo, call an OpenAI-compatible vision model, and display the translation. | `xg-glass run photo_translator/PhotoTranslatorEntry.kt --sdk /path/to/xg-glass-sdk` |
 | `exam_solver` | Auto-capture loop with streaming AI answers and conversation memory. | `xg-glass run exam_solver/ExamSolverEntry.kt --sdk /path/to/xg-glass-sdk` |
 | `teleprompter` | Simulator-runnable display teleprompter with streaming/paged display degradation and tap/long-press controls. | `xg-glass run teleprompter/TeleprompterEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
+| `voice_notes` | Simulator-runnable microphone capture with transcription when AI settings are configured, otherwise an honest audio summary. | `xg-glass run voice_notes/VoiceNotesEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
 
 ## Prerequisites
 
