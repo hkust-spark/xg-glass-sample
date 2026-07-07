@@ -9,6 +9,14 @@ These samples target xg.glass SDK `0.2.0`.
 
 If you're new to the SDK, start with the main documentation (see [**developer guide**](https://xg.glass/developer-guide/)).
 
+## Examples
+
+| Example | What it demonstrates | Run command |
+| --- | --- | --- |
+| `photo_translator` | Capture a photo, call an OpenAI-compatible vision model, and display the translation. | `xg-glass run photo_translator/PhotoTranslatorEntry.kt --sdk /path/to/xg-glass-sdk` |
+| `exam_solver` | Auto-capture loop with streaming AI answers and conversation memory. | `xg-glass run exam_solver/ExamSolverEntry.kt --sdk /path/to/xg-glass-sdk` |
+| `teleprompter` | Simulator-runnable display teleprompter with streaming/paged display degradation and tap/long-press controls. | `xg-glass run teleprompter/TeleprompterEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
+
 ## Prerequisites
 
 Install the CLI and clone the SDK checkout once:
