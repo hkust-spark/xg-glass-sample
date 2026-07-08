@@ -17,6 +17,7 @@ If you're new to the SDK, start with the main documentation (see [**developer gu
 | `exam_solver` | Auto-capture loop with streaming AI answers and conversation memory. | `xg-glass run exam_solver/ExamSolverEntry.kt --sdk /path/to/xg-glass-sdk` |
 | `teleprompter` | Simulator-runnable display teleprompter with streaming/paged display degradation and tap/long-press controls. | `xg-glass run teleprompter/TeleprompterEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
 | `voice_notes` | Simulator-runnable microphone capture with transcription when AI settings are configured, otherwise an honest audio summary. | `xg-glass run voice_notes/VoiceNotesEntry.kt --sim --sdk /path/to/xg-glass-sdk` |
+| `ai_assistant` | Standalone simulator phone-host app: video stream awareness, latest-frame snapshot on tap/button, OpenAI-compatible vision answer, and display on glasses. | `cd ai_assistant && xg-glass run --sim --local_video /path/to/sample.mp4` |
 | `play_feature_delivery` | Standalone Android App Bundle sample that keeps Even + Simulator in the base app and loads the Meta adapter through an on-demand Play Feature Delivery split. | `cd play_feature_delivery && ./gradlew :app:bundleDebug` |
 
 ## Prerequisites
@@ -50,7 +51,6 @@ Run the single-file entry directly from this directory:
 cd xg-glass-sample/photo_translator
 xg-glass run PhotoTranslatorEntry.kt --sdk /path/to/xg-glass-sdk
 ```
-
 Notes:
 
 - `xg-glass` is installed with `pip install xg-glass`; for PyPI installs, pass `--sdk /path/to/xg-glass-sdk` when running a single `.kt` entry.
@@ -72,3 +72,30 @@ override suspend fun run(ctx: UniversalAppContext): Result<Unit> {
     return ctx.client.display(text, DisplayOptions())
 }
 ```
+
+---
+
+## ai_assistant (AI Assistant)
+
+Location: `xg-glass-sample/ai_assistant`
+
+This standalone Android phone-host app demonstrates the flagship video-stream loop: connect to simulator glasses, start a LOW-tier camera stream, capture the latest stream frame when the glasses tap event or phone button fires, send it to an OpenAI-compatible vision endpoint, and display the answer on the glasses.
+
+Configuration lives in untracked `ai_assistant/local.properties` or environment variables:
+
+```properties
+ai.baseUrl=http://10.0.2.2:8765/v1
+ai.apiKey=mock-key
+ai.model=mock-vision
+```
+
+The endpoint must accept `POST /v1/chat/completions` with an `image_url` data URL. OpenAI, DashScope's OpenAI-compatible mode, and Ollama's OpenAI-compatible API can be used by changing `ai.baseUrl`, `ai.apiKey`, and `ai.model`. If any setting is missing, the app logs and displays a clear configuration message and does not crash.
+
+Run hardware-free on an emulator:
+
+```bash
+cd xg-glass-sample/ai_assistant
+xg-glass run --sim --local_video /path/to/sample.mp4
+```
+
+Without `--local_video`, the simulator uses the emulator camera. The sample was verified against a local mock endpoint; any OpenAI-compatible provider with vision support should work.

@@ -1,0 +1,4 @@
+# xg-glass project config for simulator run/build/install.
+variant: "debug"
+module: "app"
+applicationId: "com.example.xgglass.aiassistant"
