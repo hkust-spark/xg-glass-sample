@@ -4,13 +4,13 @@ This standalone Android project demonstrates keeping a base xg.glass app small w
 
 The base `:app` depends on the always-on SDK artifacts:
 
-- `io.github.hkust-spark:xgglass-core:0.2.1`
-- `io.github.hkust-spark:xgglass-core-android:0.2.1`
-- `io.github.hkust-spark:xgglass-app-contract:0.2.1`
-- `io.github.hkust-spark:xgglass-device-even:0.2.1`
-- `io.github.hkust-spark:xgglass-device-simulator:0.2.1`
+- `io.github.hkust-spark:xgglass-core:0.3.0`
+- `io.github.hkust-spark:xgglass-core-android:0.3.0`
+- `io.github.hkust-spark:xgglass-app-contract:0.3.0`
+- `io.github.hkust-spark:xgglass-device-even:0.3.0`
+- `io.github.hkust-spark:xgglass-device-simulator:0.3.0`
 
-The on-demand `:feature:meta` module depends on `io.github.hkust-spark:xgglass-device-meta:0.2.1`. The base app never imports Meta classes directly; it requests the `meta` split with `SplitInstallManager`, calls `SplitCompat.install(...)`, then instantiates `com.xgglass.device.meta.MetaWearablesGlassesClient` by reflection.
+The on-demand `:feature:meta` module depends on `io.github.hkust-spark:xgglass-device-meta:0.3.0`. The base app never imports Meta classes directly; it requests the `meta` split with `SplitInstallManager`, calls `SplitCompat.install(...)`, then instantiates `com.xgglass.device.meta.MetaWearablesGlassesClient` by reflection.
 
 Frame is intentionally not included here. `xgglass-device-frame-embedded` is not on public Maven and only resolves through the SDK source/CLI composite build; see the Frame section in the SDK's `docs/play-feature-delivery.md`.
 

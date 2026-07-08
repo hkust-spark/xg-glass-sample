@@ -13,5 +13,5 @@ android {
 
 dependencies {
     implementation(project(":app"))
-    implementation("io.github.hkust-spark:xgglass-device-meta:0.2.1")
+    implementation("io.github.hkust-spark:xgglass-device-meta:0.3.0")
 }
